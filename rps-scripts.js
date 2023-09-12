@@ -1,5 +1,6 @@
 /*
 *   rock = 0, paper = 1, scissors = 2
+*   [userChoice, computerChoice, result]
 */
 
 function getComputerChoice() {
@@ -14,29 +15,48 @@ function playRound(playerChoice, computerChoice) {
     playerChoice = playerChoice.toLowerCase();
 
     if (playerChoice === 'rock') {
-        if (computerChoice === 'rock') return 'User: Rock, Computer: Rock. Draw.'
-        if (computerChoice === 'paper') return 'User: Rock, Computer: Paper. You lose.'
-        if (computerChoice === 'scissors') return 'User: Rock, Computer: Scissors. You win.'
+        if (computerChoice === 'rock') return ['rock', 'rock', 'draw'];
+        if (computerChoice === 'paper') return ['rock', 'paper', 'computer wins'];
+        if (computerChoice === 'scissors') return ['rock', 'scissors', 'player wins'];
     }
 
     if (playerChoice === 'paper') {
-        if (computerChoice === 'rock') return 'User: Paper, Computer: Rock. You win.'
-        if (computerChoice === 'paper') return 'User: Paper, Computer: Paper. Draw.'
-        if (computerChoice === 'scissors') return 'User: Paper, Computer: Scissors. You lose.'
+        if (computerChoice === 'rock') return ['paper', 'rock', 'player wins'];
+        if (computerChoice === 'paper') return ['paper', 'paper', 'draw'];
+        if (computerChoice === 'scissors') return ['paper', 'scissors', 'computer wins'];
     }
 
     if (playerChoice === 'scissors') {
-        if (computerChoice === 'rock') return 'User: Scissors, Computer: Rock. You lose.'
-        if (computerChoice === 'paper') return 'User: Scissors, Computer: Paper. You win.'
-        if (computerChoice === 'scissors') return 'User: Scissors, Computer: Scissors. Draw.'
+        if (computerChoice === 'rock') return ['scissors', 'rock', 'computer wins'];
+        if (computerChoice === 'paper') return ['scissors', 'paper', 'player wins'];
+        if (computerChoice === 'scissors') return ['scissors', 'scissors', 'draw'];
     }
 }
 
-function game() {
-    let numRounds = 5;
-    let userInput = '';
-    for(; numRounds = 0; numRounds--) {
-        userInput = prompt('Enter choice: ');
-        console.log(playRound(userInput, getComputerChoice()));
-    }
-}
+const buttons = document.querySelectorAll('button');
+buttons.forEach(button => {
+    button.addEventListener('click', event => {
+        // console.log(event.target.textContent);
+        const round = playRound(event.target.textContent, getComputerChoice());
+        
+        if (round[2] === 'player wins') {
+            const score = document.querySelector('#player-score');
+            score.textContent = Number(score.textContent) + 1;
+            if (Number(score.textContent) === 5) alert('Player wins');
+        } else if (round[2] === 'computer wins') {
+            const score = document.querySelector('#computer-score');
+            score.textContent = Number(score.textContent) + 1;
+            if (Number(score.textContent) === 5) alert('Computer wins');
+        }
+
+        const playerMove = document.querySelector('#player-move');
+        const computerMove = document.querySelector('#computer-move');
+
+        playerMove.textContent = round[0];
+        computerMove.textContent = round[1];
+
+        const result = document.querySelector('#round-result');
+        result.textContent = round[2];
+    })
+})
+
